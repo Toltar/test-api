@@ -2,11 +2,13 @@ import pg from 'pg';
 import env from './env';
 const { Client } = pg;
 
-
-export const client = new Client({
-  user: env.POSTGRES_USER,
-  port: env.POSTGRES_PORT,
-  host: env.POSTGRES_HOST
-});
-
+export function createDbClient() {
+  return new Client({
+    user: env.POSTGRES_USER,
+    port: env.POSTGRES_PORT,
+    host: env.POSTGRES_HOST,
+    password: env.POSTGRES_PASSWORD,
+    database: env.POSTGRES_DATABASE
+  });
+};
 

@@ -1,1 +1,1 @@
-import pg from 'pg';
+import { client } from "../dbclient";

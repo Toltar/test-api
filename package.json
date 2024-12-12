@@ -5,7 +5,8 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "run": "node dist/index.js"
+    "run": "node dist/index.js",
+    "test": "vitest"
   },
   "author": "",
   "license": "ISC",
@@ -14,13 +15,16 @@
     "@types/koa__router": "^12.0.4",
     "@types/node": "^22.10.2",
     "@types/pg": "^8.11.10",
-    "typescript": "^5.7.2"
+    "fast-check": "^3.23.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "@koa/router": "^13.1.0",
     "koa": "^2.15.3",
     "pg": "^8.13.1",
     "pino": "^9.5.0",
+    "uuid": "^11.0.3",
     "zod": "^3.24.1"
   }
 }
