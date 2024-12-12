@@ -1,0 +1,26 @@
+{
+  "name": "test-api",
+  "version": "1.0.0",
+  "description": "A small test-api with customer entities",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "run": "node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/koa": "^2.15.0",
+    "@types/koa__router": "^12.0.4",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@koa/router": "^13.1.0",
+    "koa": "^2.15.3",
+    "pg": "^8.13.1",
+    "pino": "^9.5.0",
+    "zod": "^3.24.1"
+  }
+}
