@@ -120,7 +120,7 @@ export function asCustomer(customer: unknown): Customer {
   }
 };
 
-export type CreateCustomerBody = {
+export type CreateOrUpdateCustomerBody = {
   first: string;
   middle: null | undefined | string;
   last: string;
@@ -128,66 +128,37 @@ export type CreateCustomerBody = {
   number: PhoneNumber;
 } & { __brand: 'CreateCustomerBody' };
 
-export function isCreateCustomerBody(createCustomerBody: unknown) {
-  return createCustomerBody !== undefined
-    && createCustomerBody !== null
-    && typeof createCustomerBody === 'object'
-    && 'first' in createCustomerBody
-    && ('middle' in createCustomerBody ? 'middle' in createCustomerBody && typeof createCustomerBody.middle === 'string' && createCustomerBody.middle.length > 0 : true) // Since middle is optional we validate it optionally
-    && 'last' in createCustomerBody
-    && 'email' in createCustomerBody
-    && 'phoneNumber' in createCustomerBody
-    && typeof createCustomerBody.first === 'string'
-    && typeof createCustomerBody.last === 'string'
-    && createCustomerBody.first.length > 0
-    && createCustomerBody.last.length > 0
-    && isEmail(createCustomerBody.email)
-    && isPhoneNumber(createCustomerBody.phoneNumber);
+export function isCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown): createOrUpdateCustomerBody is CreateOrUpdateCustomerBody {
+  return createOrUpdateCustomerBody !== undefined
+    && createOrUpdateCustomerBody !== null
+    && typeof createOrUpdateCustomerBody === 'object'
+    && 'first' in createOrUpdateCustomerBody
+    && 'last' in createOrUpdateCustomerBody
+    && 'email' in createOrUpdateCustomerBody
+    && 'phoneNumber' in createOrUpdateCustomerBody
+    && typeof createOrUpdateCustomerBody.first === 'string'
+    && typeof createOrUpdateCustomerBody.last === 'string'
+    && createOrUpdateCustomerBody.first.length > 0
+    && createOrUpdateCustomerBody.last.length > 0
+    && isEmail(createOrUpdateCustomerBody.email)
+    && isPhoneNumber(createOrUpdateCustomerBody.phoneNumber);
 };
 
-export function asCreateCustomerBody(createCustomerBody: unknown) {
-  if (isCreateCustomerBody(createCustomerBody)) {
-    return createCustomerBody;
+export function asCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown) {
+  if (isCreateOrUpdateCustomerBody(createOrUpdateCustomerBody)) {
+    return createOrUpdateCustomerBody;
   } else {
-    if (createCustomerBody !== undefined && createCustomerBody !== null && typeof createCustomerBody === 'object') {
-      if ('email' in createCustomerBody && !isEmail(createCustomerBody.email)) {
-        throw new InvalidEmailError(createCustomerBody.email);
+    if (createOrUpdateCustomerBody !== undefined && createOrUpdateCustomerBody !== null && typeof createOrUpdateCustomerBody === 'object') {
+      if ('email' in createOrUpdateCustomerBody && !isEmail(createOrUpdateCustomerBody.email)) {
+        throw new InvalidEmailError(createOrUpdateCustomerBody.email);
       }
 
-      if ('phoneNumber' in createCustomerBody && !isPhoneNumber(createCustomerBody.phoneNumber)) {
-        throw new InvalidPhoneNumberError(createCustomerBody.phoneNumber);
+      if ('phoneNumber' in createOrUpdateCustomerBody && !isPhoneNumber(createOrUpdateCustomerBody.phoneNumber)) {
+        throw new InvalidPhoneNumberError(createOrUpdateCustomerBody.phoneNumber);
       }
     }
   }
-  throw new InvalidCustomerError(createCustomerBody);
-};
-
-export type DeleteCustomerByIdBody = {
-  id: UUID;
-} & { __brand: 'DeleteCustoemrById' };
-
-export class InvalidDeleteCustomerByIdBodyError extends Error {
-  invalidDeleteCustomerByIdBody: unknown;
-  constructor(deleteCustomerByIdBody: unknown) {
-    super(`Invalid DeleteCustomerByIdBody: ${JSON.stringify(deleteCustomerByIdBody)}`);
-    this.name = 'InvalidDeleteCustomerByIdBodyError';
-    this.invalidDeleteCustomerByIdBody = deleteCustomerByIdBody;
-  }
-};
-
-export function isDeleteCustomerByIdBody(deleteCustomerByIdBody: unknown): deleteCustomerByIdBody is DeleteCustomerByIdBody {
-  return deleteCustomerByIdBody !== undefined
-    && deleteCustomerByIdBody !== null
-    && typeof deleteCustomerByIdBody === 'object'
-    && 'id' in deleteCustomerByIdBody
-    && isUUID(deleteCustomerByIdBody.id);
-};
-
-export function asDeleteCustomerByIdBody(deleteCustomerByIdBody: unknown): DeleteCustomerByIdBody {
-  if (isDeleteCustomerByIdBody(deleteCustomerByIdBody)) {
-    return deleteCustomerByIdBody;
-  }
-  throw new InvalidDeleteCustomerByIdBodyError(deleteCustomerByIdBody);
+  throw new InvalidCustomerError(createOrUpdateCustomerBody);
 };
 
 

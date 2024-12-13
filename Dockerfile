@@ -1,34 +1,22 @@
-ARG NODE_VERSION=22.11.0
+# Use a Node.js base image
+FROM node:22.11.0-alpine
 
-FROM node:${NODE_VERSION}-alpine as base
+# Set the working directory inside the container
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
 
-FROM base as build
+# Install dependencies
+RUN npm install
 
-COPY package*.json .
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --include=dev
-
+# Copy the rest of the application code
 COPY . .
 
 RUN npm run build
 
-FROM build as run
-
-WORKDIR /usr/src/app
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
-COPY . .
-COPY --from=build /usr/src/app/dist ./dist
-
+# Expose the port your API listens on
 EXPOSE 3000
 
-CMD [ "node", "./dist/index.js" ]
+# Start the application
+CMD ["npm", "start"]

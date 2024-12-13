@@ -83,22 +83,4 @@ describe('Type Validation', () => {
     });
   });
 
-  describe('asCustomer()', () => {
-  });
-
-  describe('isCreateCustomerBody()', () => {
-
-  });
-
-  describe('asCreateCustomerBody()', () => {
-
-  });
-
-  describe('isDeleteCustomerBodyById()', () => {
-
-  });
-
-  describe('asDeleteCustomerByIdBody()', () => {
-
-  });
 });
