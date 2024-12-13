@@ -7,8 +7,7 @@ export function createDbClient() {
     user: env.POSTGRES_USER,
     port: env.POSTGRES_PORT,
     host: env.POSTGRES_HOST,
-    password: env.POSTGRES_PASSWORD,
-    database: env.POSTGRES_DATABASE
+    database: env.POSTGRES_DB
   });
 };
 

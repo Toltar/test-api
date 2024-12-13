@@ -13,6 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+COPY tsconfig.json .
+
 RUN npm run build
 
 # Expose the port your API listens on

@@ -2,15 +2,16 @@ version: "3.7"
 
 services:
   db:
-    image: postgres
+    image: "postgres:latest"
     restart: always
     env_file:
       - .env
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./db/sql:/docker-entrypoint-initdb.d
-      - db-data:/var/lib/postgresql/data
     ports:
-      - 5432
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 10s
@@ -18,9 +19,6 @@ services:
   api:
     build:
       context: .
-    environment:
-      NODE_ENV: production
-      POSTGRES_URL:
     env_file:
       - .env
     ports:

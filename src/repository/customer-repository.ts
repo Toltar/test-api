@@ -1,14 +1,21 @@
 import { createDbClient } from "../dbclient";
 import { CreateOrUpdateCustomerBody, Customer, UUID } from "../types/customer";
 import env from "../env";
+import logger from "../logger";
 
 export const CustomerTableName = env.CUSTOMER_TABLE_NAME;
 
 export async function createCustomer(customer: CreateOrUpdateCustomerBody): Promise<Customer> {
   const client = createDbClient();
 
-  const newCustomerQueryResult = await client.query(`INSERT INTO ${CustomerTableName} as customer ('${customer.first}', '${customer.middle}', '${customer.last}', '${customer.email}', '${customer.number}') RETURNING *;`);
-
+  logger.info("Creating Customer in the database");
+  await client.connect();
+  const newCustomerQueryResult = await client.query(
+    `INSERT INTO customer (first, middle, last, email, phone_number) 
+      VALUES (\'${customer.first}\', \'${customer.middle}\', \'${customer.last}\', \'${customer.email}\', \'${customer.phone_number}\') 
+      RETURNING *;`
+  );
+  await client.end();
   const newCustomer: Customer = newCustomerQueryResult.rows[0];
 
   return newCustomer;
@@ -17,7 +24,9 @@ export async function createCustomer(customer: CreateOrUpdateCustomerBody): Prom
 export async function getCustomerById(id: UUID): Promise<Customer> {
   const client = createDbClient();
 
-  const customerQueryResult = await client.query(`SELECT * FROM ${CustomerTableName} WHERE id = ${id};`);
+  await client.connect();
+  const customerQueryResult = await client.query(`SELECT * FROM ${CustomerTableName} WHERE id = \'${id}\';`);
+  await client.end();
 
   const customer: Customer = customerQueryResult.rows[0];
   if (customerQueryResult.rows.length === 1) {
@@ -27,30 +36,37 @@ export async function getCustomerById(id: UUID): Promise<Customer> {
   throw new CustomerNotFoundError(id);
 };
 
+export async function getAllCustomers(): Promise<Customer[]> {
+  const client = createDbClient();
+
+  client.connect();
+  const customerQueryResult = await client.query(`SELECT * FROM ${CustomerTableName};`);
+  client.end();
+
+  const customers: Customer[] = customerQueryResult.rows;
+
+  return customers;
+};
+
 export async function deleteCustomerById(id: UUID): Promise<void> {
   const client = createDbClient();
 
-  try {
-    await client.query(`DELETE FROM ${CustomerTableName} WHERE id = ${id}`);
-  } catch (error: unknown) {
-    throw new Error(`Failed to delete record with id ${id}`);
-  }
+  client.connect();
+  await client.query(`DELETE FROM ${CustomerTableName} WHERE id = \'${id}\'`);
+  client.end();
 };
 
 
-export async function updateCustomer(id: UUID, customer: CreateOrUpdateCustomerBody): Promise<Customer> {
+export async function updateCustomer(id: UUID, customer: CreateOrUpdateCustomerBody): Promise<void> {
   const client = createDbClient();
 
-  const updatedCustomerQueryResult = await client.query(
-    `UPDATE ${CustomerTableName} SET first = ${customer.first}, last = ${customer.last}, middle = ${customer.middle}, email = ${customer.email}, number = ${customer.number} WHERE id = ${id} RETURNING *;`
+  client.connect();
+  await client.query(
+    `UPDATE ${CustomerTableName} 
+    SET first = \'${customer.first}\', last = \'${customer.last}\', middle = \'${customer.middle}\', email = \'${customer.email}\', phone_number = \'${customer.phone_number}\' 
+    WHERE id = \'${id}\';`
   );
-
-  const updatedCustomer = updatedCustomerQueryResult.rows[0];
-  if (updatedCustomer) {
-    return updatedCustomer;
-  }
-
-  throw new UpdateFailedError(id);
+  client.end()
 };
 
 
@@ -69,9 +85,3 @@ export class UpdateFailedError extends Error {
   }
 };
 
-export class DeletionFailedError extends Error {
-  constructor(id: UUID) {
-    super(`Customer not delete with id ${id}`);
-    this.name = 'DeletionFailedError';
-  }
-};

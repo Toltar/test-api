@@ -4,9 +4,8 @@ export const envSchema = z.object({
   PORT: z.coerce.number(),
   POSTGRES_HOST: z.string(),
   POSTGRES_USER: z.string(),
-  POSTGRES_PORT: z.number(),
-  POSTGRES_PASSWORD: z.string(),
-  POSTGRES_DATABASE: z.string(),
+  POSTGRES_PORT: z.coerce.number(),
+  POSTGRES_DB: z.string(),
   CUSTOMER_TABLE_NAME: z.string()
 });
 

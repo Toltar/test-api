@@ -66,7 +66,7 @@ export type Customer = {
   middle: null | undefined | string;
   last: string;
   email: string;
-  phoneNumber: PhoneNumber;
+  phone_number: PhoneNumber;
 } & { brand: 'Customer' }
 
 
@@ -87,13 +87,13 @@ export function isCustomer(customer: unknown): customer is Customer {
     && 'first' in customer
     && 'last' in customer
     && 'email' in customer
-    && 'phoneNumber' in customer
+    && 'phone_number' in customer
     && typeof customer.first === 'string'
     && typeof customer.last === 'string'
     && customer.first.length > 0
     && customer.last.length > 0
     && isEmail(customer.email)
-    && isPhoneNumber(customer.phoneNumber)
+    && isPhoneNumber(customer.phone_number)
     && isUUID(customer.id);
 };
 
@@ -107,8 +107,8 @@ export function asCustomer(customer: unknown): Customer {
         throw new InvalidEmailError(customer.email);
       }
 
-      if ('phoneNumber' in customer && !isPhoneNumber(customer.phoneNumber)) {
-        throw new InvalidPhoneNumberError(customer.phoneNumber);
+      if ('phone_number' in customer && !isPhoneNumber(customer.phone_number)) {
+        throw new InvalidPhoneNumberError(customer.phone_number);
       }
 
       if ('id' in customer && !isUUID(customer.id)) {
@@ -125,7 +125,7 @@ export type CreateOrUpdateCustomerBody = {
   middle: null | undefined | string;
   last: string;
   email: string;
-  number: PhoneNumber;
+  phone_number: PhoneNumber;
 } & { __brand: 'CreateCustomerBody' };
 
 export function isCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown): createOrUpdateCustomerBody is CreateOrUpdateCustomerBody {
@@ -135,13 +135,13 @@ export function isCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown
     && 'first' in createOrUpdateCustomerBody
     && 'last' in createOrUpdateCustomerBody
     && 'email' in createOrUpdateCustomerBody
-    && 'phoneNumber' in createOrUpdateCustomerBody
+    && 'phone_number' in createOrUpdateCustomerBody
     && typeof createOrUpdateCustomerBody.first === 'string'
     && typeof createOrUpdateCustomerBody.last === 'string'
     && createOrUpdateCustomerBody.first.length > 0
     && createOrUpdateCustomerBody.last.length > 0
     && isEmail(createOrUpdateCustomerBody.email)
-    && isPhoneNumber(createOrUpdateCustomerBody.phoneNumber);
+    && isPhoneNumber(createOrUpdateCustomerBody.phone_number);
 };
 
 export function asCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown) {
@@ -153,8 +153,8 @@ export function asCreateOrUpdateCustomerBody(createOrUpdateCustomerBody: unknown
         throw new InvalidEmailError(createOrUpdateCustomerBody.email);
       }
 
-      if ('phoneNumber' in createOrUpdateCustomerBody && !isPhoneNumber(createOrUpdateCustomerBody.phoneNumber)) {
-        throw new InvalidPhoneNumberError(createOrUpdateCustomerBody.phoneNumber);
+      if ('phone_number' in createOrUpdateCustomerBody && !isPhoneNumber(createOrUpdateCustomerBody.phone_number)) {
+        throw new InvalidPhoneNumberError(createOrUpdateCustomerBody.phone_number);
       }
     }
   }
