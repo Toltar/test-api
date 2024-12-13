@@ -2,7 +2,7 @@
 
 ## How to Run
 
-All you need is to run:
+All you need is to create a `.env` file based off of the `.env_example` file given. Then run the api with the following docker command:
 
 ```bash
 docker compose up --build
